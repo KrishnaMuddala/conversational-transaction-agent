@@ -1,4 +1,4 @@
-# Conversational Transaction Agent (DBS DCTA)
+# DEX Conversational Transaction Agent (DEX DCTA)
 
 A Direct Conversational Transaction Agent built for the Tencent TRTC + ADP hackathon:
 turn a spoken or typed banking instruction — *"send 50 to Ravi for dinner"* — into a
