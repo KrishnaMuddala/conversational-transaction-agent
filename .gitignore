@@ -4,12 +4,16 @@ __pycache__/
 venv/
 .pytest_cache/
 
-# Secrets — all env variants AND the example files (they currently contain
-# real values; un-ignore them only after replacing values with placeholders)
+# Secrets — all env variants AND the example files. backend/.env.example and
+# frontend/.env.local.example are scrubbed placeholder templates (verified
+# 2026-10-15) and un-ignored below; deploy/terraform tfvars.example still
+# carries live values on disk, so it stays ignored until scrubbed.
 .env
 .env.*
 .env.example
 .env.local.example
+!backend/.env.example
+!frontend/.env.local.example
 
 # Node
 node_modules/
