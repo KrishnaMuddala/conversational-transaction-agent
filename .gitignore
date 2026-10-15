@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.pytest_cache/
+
+# Secrets — all env variants AND the example files (they currently contain
+# real values; un-ignore them only after replacing values with placeholders)
+.env
+.env.*
+.env.example
+.env.local.example
+
+# Node
+node_modules/
+.next/
+
+# Docker
+postgres_data/
+
+# Terraform
+deploy/terraform/.terraform/
+deploy/terraform/*.tfstate
+deploy/terraform/*.tfstate.backup
+deploy/terraform/*.tfplan
+deploy/terraform/.terraform.lock.hcl
+deploy/terraform/terraform.tfvars
+deploy/terraform/*.tfvars.example
+deploy/terraform/tfplan
+deploy/terraform/provider_schema.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Third-party documents (hackathon handbook / guides — not ours to publish)
+*.pdf
+!docs/**/*.pdf
+
+# Office binaries & temp lock files
+*.xlsx
+*.pptx
+~$*
+
+# Local agent/IDE state
+.agents/

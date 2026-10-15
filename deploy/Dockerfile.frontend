@@ -1,0 +1,23 @@
+# Frontend Dockerfile for DBS DCTA on Tencent Cloud
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY frontend/package.json ./
+RUN npm install
+
+COPY frontend/ ./
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, so this
+# must be supplied as a build arg -- overriding it at runtime has no effect.
+ARG NEXT_PUBLIC_API_BASE_URL=/api
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+CMD ["node", "server.js"]

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "trtc-asr": "github:Tencent-RTC/trtc-asr-sdk-nodejs"
+  }
+}

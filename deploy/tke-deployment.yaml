@@ -1,0 +1,80 @@
+# Example Tencent Kubernetes Engine (TKE) deployment manifest.
+# Apply with: kubectl apply -f tke-deployment.yaml
+# Assumes you have created:
+#   - a namespace 'dbs-dcta'
+#   - a Secret 'dbs-dcta-secrets' with environment variables
+#   - a PostgreSQL instance reachable via the service 'db'
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dbs-dcta
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbs-dcta-backend
+  namespace: dbs-dcta
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dbs-dcta-backend
+  template:
+    metadata:
+      labels:
+        app: dbs-dcta-backend
+    spec:
+      containers:
+        - name: backend
+          image: ccr.ccs.tencentyun.com/dbs-dcta/dbs-dcta:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: dbs-dcta-secrets
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbs-dcta-backend
+  namespace: dbs-dcta
+spec:
+  selector:
+    app: dbs-dcta-backend
+  ports:
+    - port: 80
+      targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dbs-dcta-ingress
+  namespace: dbs-dcta
+  annotations:
+    kubernetes.io/ingress.class: qcloud
+spec:
+  rules:
+    - host: dbs-dcta.sg
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dbs-dcta-backend
+                port:
+                  number: 80
